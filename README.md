@@ -1,1 +1,2 @@
 
+https://flashgeniuscard.vercel.app/
