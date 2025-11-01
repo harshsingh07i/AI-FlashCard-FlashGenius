@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     ${content}`
 
     const result = streamText({
-      model: "openai/gpt-4o-mini",
+      model: "xai/grok-2",
       prompt: prompt,
       system:
         "You are an expert educational content creator. Generate high-quality flashcards that help students learn effectively. Always respond with valid JSON format.",
@@ -36,6 +36,17 @@ export async function POST(request: NextRequest) {
     return result.toTextStreamResponse()
   } catch (error) {
     console.error("Error generating flashcards:", error)
-    return new Response("Failed to generate flashcards", { status: 500 })
+
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    if (errorMessage.includes("exhausted") || errorMessage.includes("spending limit")) {
+      return new Response(
+        JSON.stringify({
+          error: "API credits exhausted. Please check your xAI account or contact support.",
+        }),
+        { status: 429 },
+      )
+    }
+
+    return new Response(JSON.stringify({ error: "Failed to generate flashcards" }), { status: 500 })
   }
 }
