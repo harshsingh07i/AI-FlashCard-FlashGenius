@@ -1,5 +1,4 @@
 import { streamText } from "ai"
-import { xai } from "@ai-sdk/xai"
 import type { NextRequest } from "next/server"
 
 export async function POST(request: NextRequest) {
@@ -28,9 +27,7 @@ export async function POST(request: NextRequest) {
     ${content}`
 
     const result = streamText({
-      model: xai("grok-4", {
-        apiKey: process.env.XAI_API_KEY,
-      }),
+      model: "openai/gpt-4o-mini",
       prompt: prompt,
       system:
         "You are an expert educational content creator. Generate high-quality flashcards that help students learn effectively. Always respond with valid JSON format.",
